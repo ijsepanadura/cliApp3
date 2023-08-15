@@ -18,12 +18,15 @@ public class App3{
         final String CHECK_BALANCE = "Check Account Balance";
         final String DELETE_ACCOUNT = "Delete Account";
 
-        final String ERROR_MSG = String.format("\t%s%s%s\n", COLOR_RED_BOLD, "%s", RESET);
-        final String SUCCESS_MSG = String.format("\t%s%s%s\n", COLOR_GREEN_BOLD, "%s", RESET);
+        final String ERROR_MSG = String.format("  %s%s%s\n", COLOR_RED_BOLD, "%s", RESET);
+        final String SUCCESS_MSG = String.format("  %s%s%s\n", COLOR_GREEN_BOLD, "%s", RESET);
     
         
-        String[] idName = new String[0];
+        int[] idVal = new int[0];
+        int id=0;
+        int inDepo;
         String[] customer = new String[0];
+        
 
         String screen = DASHBOARD;
 
@@ -64,7 +67,7 @@ public class App3{
                     }
                     continue;
                 case ADD_ACCOUNT:
-                    String id;
+                    
                     String name;
                     boolean valid= true;
 
@@ -76,13 +79,12 @@ public class App3{
                         if(name.isBlank()){
                             System.out.printf(ERROR_MSG,"Name cannot be empty..\n");
                             valid = false;
-                            break;
+                            continue;
                         }
                         
-                        System.out.println("inside the ");
                         for(int i=0; i<name.length(); i++){
                             if(!(Character.isLetter(name.charAt(i)) || Character.isSpaceChar(name.charAt(i)))){
-                                System.out.printf("ERROR_MSG,","Entered Name is Invalid ");
+                                System.out.printf(ERROR_MSG,"Entered Name is Invalid ");
                                 valid =false;
                                 break;
                             }
@@ -90,10 +92,37 @@ public class App3{
 
                     }while(!valid);
 
+                    int[] newId = new int[idVal.length + 1];
+                    String[] newCustomer = new String[customer.length + 1];
+                    for (int i = 0; i < customer.length; i++) {
+                        newId[i] = idVal[i];
+                        newCustomer[i] = customer[i];
+                    }
+                    newId[newId.length - 1] = ++id;
+                    newCustomer[newCustomer.length - 1] = name;
+                    customer = newCustomer;
+                    idVal = newId;
+
+                    System.out.printf("%-22s: ","Inital Deposit");
+                    inDepo = scanner.nextInt();
+                    scanner.skip(System.lineSeparator());
+                    if(inDepo<5000){
+                        System.out.printf(ERROR_MSG,"Intial Deposit should be greater than Rs.5000.00");
+                        break;
+                    }
+
+                    System.out.println();
+                    System.out.printf(SUCCESS_MSG,String.format("SDB-%05d:%s Account has been created successfully", idVal[idVal.length-1], customer[customer.length-1]));
+                    System.out.print("Do you want to continue adding (Y/n)? ");
+                    if (scanner.nextLine().strip().toUpperCase().equals("Y")) continue;
+                    screen = DASHBOARD;
+                    break;
+                
+
             }
 
 
-            //break;
+            break;
         } while(true);
         
     }
