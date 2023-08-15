@@ -24,7 +24,8 @@ public class App3{
         
         int[] idVal = new int[0];
         int id=0;
-        int inDepo;
+        int[] balance = new int[0];
+        int inDepo=0;
         String[] customer = new String[0];
         
 
@@ -71,7 +72,7 @@ public class App3{
                     String name;
                     boolean valid= true;
 
-                    //validation
+                    validationA:
                     do{
                         System.out.printf("%-22s: SDB-%05d \n","New Account ID",(customer.length + 1));
                         System.out.printf("%-22s: ","Account Holder Name");
@@ -86,30 +87,35 @@ public class App3{
                             if(!(Character.isLetter(name.charAt(i)) || Character.isSpaceChar(name.charAt(i)))){
                                 System.out.printf(ERROR_MSG,"Entered Name is Invalid ");
                                 valid =false;
-                                break;
+                                continue validationA;
                             }
                         }
+                        System.out.printf("%-22s: ","Inital Deposit");
+                        inDepo = scanner.nextInt();
+                        scanner.skip(System.lineSeparator());
+                        if(inDepo<5000){
+                            System.out.printf(ERROR_MSG,"Intial Deposit should be greater than Rs.5000.00");
+                            valid = false;
+                            continue;
+                        }
+                        break;
 
                     }while(!valid);
 
                     int[] newId = new int[idVal.length + 1];
                     String[] newCustomer = new String[customer.length + 1];
+                    int[] newBalance = new int[balance.length + 1 ];
                     for (int i = 0; i < customer.length; i++) {
                         newId[i] = idVal[i];
                         newCustomer[i] = customer[i];
+                        newBalance[i] = balance[i];
                     }
                     newId[newId.length - 1] = ++id;
                     newCustomer[newCustomer.length - 1] = name;
+                    newBalance[newBalance.length -1] = inDepo;
                     customer = newCustomer;
                     idVal = newId;
-
-                    System.out.printf("%-22s: ","Inital Deposit");
-                    inDepo = scanner.nextInt();
-                    scanner.skip(System.lineSeparator());
-                    if(inDepo<5000){
-                        System.out.printf(ERROR_MSG,"Intial Deposit should be greater than Rs.5000.00");
-                        break;
-                    }
+                    balance= newBalance;
 
                     System.out.println();
                     System.out.printf(SUCCESS_MSG,String.format("SDB-%05d:%s Account has been created successfully", idVal[idVal.length-1], customer[customer.length-1]));
